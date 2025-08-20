@@ -1,0 +1,250 @@
+/* Event Detail Section */
+.event-detail-section {
+  background: var(--white);
+  padding: 120px 0;
+}
+
+.event-detail-container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.event-detail-main {
+  padding: 40px;
+  background: var(--white);
+  border-radius: 24px;
+  box-shadow: var(--shadow-xl);
+  border: 1px solid var(--gray-200);
+  transition: all var(--transition-normal);
+}
+
+.event-detail-main h1 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: var(--gray-900);
+  margin-bottom: 1.5rem;
+  line-height: 1.2;
+}
+
+.event-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  margin-bottom: 2rem;
+}
+
+.event-meta span {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.95rem;
+  color: var(--gray-600);
+  font-weight: 500;
+}
+
+.event-meta i {
+  color: var(--green-500);
+  font-size: 1.25rem;
+}
+
+.event-description,
+.event-committee {
+  margin-bottom: 2.5rem;
+}
+
+.event-description h3,
+.event-committee h3 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--green-600);
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.event-description p,
+.event-committee p {
+  color: var(--gray-700);
+  line-height: 1.7;
+  font-size: 1rem;
+}
+
+.event-committee p:empty::before {
+  content: "Aucun comité spécifié";
+  color: var(--gray-600);
+}
+
+.event-sidebar {
+  background: var(--gray-50);
+  border-radius: 20px;
+  padding: 30px;
+  border: 1px solid var(--gray-200);
+  box-shadow: var(--shadow-md);
+  transition: all var(--transition-normal);
+}
+
+.event-sidebar h3 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--gray-900);
+  margin-bottom: 1.5rem;
+}
+
+.event-sidebar p {
+  color: var(--gray-700);
+  font-size: 0.95rem;
+  margin-bottom: 1rem;
+  line-height: 1.6;
+}
+
+.event-sidebar p strong {
+  color: var(--gray-900);
+  font-weight: 600;
+}
+
+.event-sidebar .btn {
+  width: 100%;
+  padding: 15px 20px;
+  border-radius: 25px;
+  font-weight: 600;
+  font-size: 0.95rem;
+  transition: all var(--transition-normal);
+  margin-bottom: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  box-shadow: var(--shadow-md);
+}
+
+.event-sidebar .btn-primary {
+  background: var(--gradient-green);
+  color: var(--white);
+  border: none;
+}
+
+.event-sidebar .btn-primary:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-lg);
+  background: var(--green-600);
+}
+
+.event-sidebar .btn-sponsor {
+  background: var(--gradient-orange);
+  color: var(--white);
+  border: none;
+}
+
+.event-sidebar .btn-sponsor:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-lg);
+  background: var(--orange-600);
+}
+
+/* Responsive Design */
+@media (max-width: 992px) {
+  .event-detail-section {
+    padding: 80px 0;
+  }
+
+  .event-detail-main {
+    padding: 30px;
+  }
+
+  .event-detail-main h1 {
+    font-size: 2rem;
+  }
+
+  .event-description h3,
+  .event-committee h3 {
+    font-size: 1.25rem;
+  }
+
+  .event-sidebar {
+    margin-top: 2rem;
+    padding: 20px;
+  }
+}
+
+@media (max-width: 768px) {
+  .event-detail-section {
+    padding: 60px 0;
+  }
+
+  .event-detail-main {
+    padding: 20px;
+  }
+
+  .event-detail-main h1 {
+    font-size: 1.75rem;
+  }
+
+  .event-meta {
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .event-sidebar {
+    padding: 15px;
+  }
+
+  .event-sidebar h3 {
+    font-size: 1.125rem;
+  }
+
+  .event-sidebar .btn {
+    padding: 12px 15px;
+    font-size: 0.875rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .event-detail-main h1 {
+    font-size: 1.5rem;
+  }
+
+  .event-meta span {
+    font-size: 0.875rem;
+  }
+
+  .event-description h3,
+  .event-committee h3 {
+    font-size: 1.125rem;
+  }
+
+  .event-description p,
+  .event-committee p {
+    font-size: 0.95rem;
+  }
+}
+
+/* RTL Support */
+[dir="rtl"] .event-meta {
+  flex-direction: row-reverse;
+}
+
+[dir="rtl"] .event-meta span {
+  flex-direction: row-reverse;
+}
+
+[dir="rtl"] .event-description h3,
+[dir="rtl"] .event-committee h3 {
+  flex-direction: row-reverse;
+}
+
+[dir="rtl"] .event-sidebar {
+  text-align: right;
+}
+
+/* Print Styles */
+@media print {
+  .event-sidebar .btn {
+    display: none;
+  }
+
+  .event-detail-main {
+    box-shadow: none;
+    border: 1px solid var(--gray-300);
+  }
+}
