@@ -28,7 +28,9 @@ server {
   charset utf-8;
 
   location / {
-      try_files $uri $uri/ /index.php?$query_string;
+
+      <!-- try_files $uri $uri/ /index.php?$query_string; -->
+      try_files $uri $uri/ /index.php$is_args$args;
       
       <!-- root   /var/www/html/dev.mysite.co.uk/public;
       index index.php index.html index.htm;
