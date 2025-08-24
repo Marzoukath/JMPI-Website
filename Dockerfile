@@ -1,7 +1,7 @@
 FROM richarvey/nginx-php-fpm:3.1.6
 
 COPY . .
-COPY nginx-site /etc/nginx/sites-available/default
+COPY conf/nginx/nginx-site /etc/nginx/sites-available/default
 
 # Image config
 ENV SKIP_COMPOSER 1
