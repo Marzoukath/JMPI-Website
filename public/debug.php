@@ -58,4 +58,43 @@ try {
     echo "❌ Erreur Laravel: " . $e->getMessage() . "<br>";
 }
 
+echo "<h2>Configuration Nginx active</h2>";
+$nginxConfig = file_get_contents('/etc/nginx/sites-available/default');
+if($nginxConfig) {
+    echo "<pre style='background: #f5f5f5; padding: 10px; font-size: 12px; max-height: 300px; overflow-y: scroll;'>";
+    echo htmlspecialchars(substr($nginxConfig, 0, 1000));
+    echo "...</pre>";
+} else {
+    echo "❌ Impossible de lire la configuration nginx<br>";
+}
+
+echo "<h2>Test direct des URLs</h2>";
+// Tester les redirections nginx
+$urls_to_test = ['/test', '/events', '/formulaire'];
+foreach($urls_to_test as $url) {
+    $headers = get_headers("http://localhost$url", 1);
+    echo "URL $url: " . ($headers[0] ?? 'Erreur') . "<br>";
+}
+
+echo "<h2>Test de redirection nginx</h2>";
+echo "Si vous voyez cette page via /debug.php, alors nginx traite les fichiers .php<br>";
+echo "Si /test ou /events ne fonctionnent pas, c'est que nginx ne redirige pas vers index.php<br><br>";
+
+// Test simple de redirection
+if(isset($_SERVER['REQUEST_URI'])) {
+    $uri = $_SERVER['REQUEST_URI'];
+    echo "URI actuelle: $uri<br>";
+    
+    if($uri === '/debug.php') {
+        echo "✅ Accès direct à un fichier PHP fonctionne<br>";
+    } else {
+        echo "🔄 Cette requête a été redirigée par nginx vers debug.php<br>";
+    }
+}
+
+echo "<h2>Test Laravel via index.php direct</h2>";
+// Forcer l'accès à index.php avec query string
+$indexUrl = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://" . $_SERVER['HTTP_HOST'] . "/index.php?test=1";
+echo "<a href='$indexUrl' target='_blank'>Tester index.php?test=1</a><br><br>";
+
 ?>
