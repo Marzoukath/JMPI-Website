@@ -25,3 +25,6 @@ Route::get('/formulaire', function () {
     return view('jmpi-website.formulaire');
 })->name('contact');
 Route::get('/', [QuoteController::class, 'getDailyQuote'])->name('home');
+Route::get('/test', function() {
+    return 'Test route works!';
+});

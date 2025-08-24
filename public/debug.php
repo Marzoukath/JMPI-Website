@@ -34,4 +34,28 @@ echo "<h2>Variables d'environnement</h2>";
 echo "APP_ENV: " . ($_ENV['APP_ENV'] ?? 'non défini') . "<br>";
 echo "APP_DEBUG: " . ($_ENV['APP_DEBUG'] ?? 'non défini') . "<br>";
 
+echo "<h2>Test Laravel direct</h2>";
+try {
+    // Inclure Laravel manuellement
+    require_once '/var/www/html/vendor/autoload.php';
+    $app = require_once '/var/www/html/bootstrap/app.php';
+    $kernel = $app->make(Illuminate\Contracts\Http\Kernel::class);
+    
+    echo "✅ Laravel peut être chargé<br>";
+    
+    // Simuler une requête vers /events
+    $request = Illuminate\Http\Request::create('/events', 'GET');
+    $response = $kernel->handle($request);
+    
+    echo "Status: " . $response->getStatusCode() . "<br>";
+    if($response->getStatusCode() === 200) {
+        echo "✅ Route /events existe dans Laravel<br>";
+    } else {
+        echo "❌ Route /events n'existe pas ou erreur<br>";
+    }
+    
+} catch(Exception $e) {
+    echo "❌ Erreur Laravel: " . $e->getMessage() . "<br>";
+}
+
 ?>

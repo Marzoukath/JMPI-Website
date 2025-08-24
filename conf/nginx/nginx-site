@@ -3,7 +3,7 @@ server {
     server_name _;
     root /var/www/html/public;
     
-    index index.php;
+    index index.php index.html;
     
     charset utf-8;
 
@@ -31,8 +31,9 @@ server {
         log_not_found off;
     }
 
-    # Main location block - CRITICAL for Laravel routing
+    # CRITICAL: Main location block for Laravel
     location / {
+        # Essayer le fichier directement, puis le dossier, puis rediriger vers index.php
         try_files $uri $uri/ /index.php?$query_string;
     }
 
@@ -40,11 +41,13 @@ server {
     location = /favicon.ico { 
         access_log off; 
         log_not_found off; 
+        try_files $uri =204;
     }
     
     location = /robots.txt  { 
         access_log off; 
         log_not_found off; 
+        try_files $uri =204;
     }
 
     # Static files caching
@@ -52,17 +55,25 @@ server {
         expires 1y;
         add_header Cache-Control "public, immutable";
         access_log off;
+        try_files $uri =404;
     }
 
-    # PHP-FPM configuration
+    # PHP-FPM configuration - CRITIQUE pour Laravel
     location ~ \.php$ {
+        # Vérifier que le fichier existe
         try_files $uri =404;
+        
         fastcgi_split_path_info ^(.+\.php)(/.+)$;
         fastcgi_pass unix:/var/run/php-fpm.sock;
         fastcgi_index index.php;
+        
         include fastcgi_params;
         fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
         fastcgi_param PATH_INFO $fastcgi_path_info;
+        
+        # Variables importantes pour Laravel
+        fastcgi_param HTTP_HOST $host;
+        fastcgi_param SERVER_NAME $host;
     }
 
     # Deny access to other sensitive files
