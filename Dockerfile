@@ -1,6 +1,7 @@
 FROM richarvey/nginx-php-fpm:3.1.6
 
 COPY . .
+COPY nginx-site /etc/nginx/sites-available/default
 
 # Image config
 ENV SKIP_COMPOSER 1
@@ -16,5 +17,10 @@ ENV LOG_CHANNEL stderr
 
 # Allow composer to run as root
 ENV COMPOSER_ALLOW_SUPERUSER 1
+
+RUN composer install --no-dev --optimize-autoloader
+RUN php artisan config:cache
+RUN php artisan route:cache
+RUN php artisan view:cache
 
 CMD ["/start.sh"]
