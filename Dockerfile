@@ -3,9 +3,6 @@ FROM richarvey/nginx-php-fpm:3.1.6
 # Copy application files
 COPY . .
 
-# Copy the nginx configuration
-COPY nginx-site /etc/nginx/sites-available/default
-
 # Image config
 ENV SKIP_COMPOSER 1
 ENV WEBROOT /var/www/html/public
@@ -26,7 +23,7 @@ RUN chown -R www-data:www-data /var/www/html && \
     chmod -R 755 /var/www/html/storage && \
     chmod -R 755 /var/www/html/bootstrap/cache
 
-# Clear Laravel caches
+# Clear Laravel caches and optimize
 RUN php artisan cache:clear && \
     php artisan config:clear && \
     php artisan route:clear && \
