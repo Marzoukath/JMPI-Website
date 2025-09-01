@@ -17,7 +17,4 @@ ENV LOG_CHANNEL stderr
 # Allow composer to run as root
 ENV COMPOSER_ALLOW_SUPERUSER 1
 
-RUN php artisan cache:clear && \
-    php artisan config:clear && \
-    php artisan route:clear
 CMD ["/start.sh"]
