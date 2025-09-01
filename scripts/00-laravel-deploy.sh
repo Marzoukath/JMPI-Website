@@ -16,5 +16,11 @@ php artisan route:cache
 echo "Migrations en cours..." 
 php artisan migrate --force
 
+
+echo "Setting permissions..."
+chown -R nginx:nginx /var/www/html
+chmod -R 775 /var/www/html/storage
+chmod -R 775 /var/www/html/bootstrap/cache
+
 echo "Création des seeders..."
 php artisan db:seed --force
