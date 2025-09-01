@@ -1,67 +1,66 @@
 server {
-  # Render provisions and terminates SSL
-  listen 80;
+    listen 80;
+    server_name _;
+    root /var/www/html/public;
+    index index.php index.html index.htm;
 
-  # Make site accessible from http://localhost/
-  server_name _;
+    # Logs
+    error_log /dev/stdout info;
+    access_log /dev/stdout;
 
-  root /var/www/html/public;
-  index index.html index.htm index.php;
+    # Block access to sensitive information
+    location ~ /\.git {
+        deny all;
+        return 403;
+    }
 
-  # Disable sendfile as per https://docs.vagrantup.com/v2/synced-folders/virtualbox.html
-  sendfile off;
+    # Security headers
+    add_header X-Frame-Options "SAMEORIGIN";
+    add_header X-XSS-Protection "1; mode=block";
+    add_header X-Content-Type-Options "nosniff";
 
-  # Add stdout logging
-  error_log /dev/stdout info;
-  access_log /dev/stdout;
+    charset utf-8;
 
-  # block access to sensitive information about git
-  location /.git {
-    deny all;
-    return 403;
-  }
+    # Main location block - CRITICAL FOR LARAVEL ROUTING
+    location / {
+        try_files $uri $uri/ /index.php?$query_string;
+    }
 
-  add_header X-Frame-Options "SAMEORIGIN";
-  add_header X-XSS-Protection "1; mode=block";
-  add_header X-Content-Type-Options "nosniff";
-
-  charset utf-8;
-
-  location / {
-
-      try_files $uri $uri/ /index.php?$query_string;
-     
-      
-      #root   /var/www/html/dev.mysite.co.uk/public;
-      #index index.php index.html index.htm;
+    # PHP handling - CORRECTION IMPORTANTE
+    location ~ \.php$ {
+        try_files $uri =404;
+        fastcgi_split_path_info ^(.+\.php)(/.+)$;
+        fastcgi_pass unix:/var/run/php-fpm.sock;
+        fastcgi_index index.php;
+        fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+        include fastcgi_params;
         
-  }
+        # Additional parameters for Laravel
+        fastcgi_param PATH_INFO $fastcgi_path_info;
+        fastcgi_param QUERY_STRING $query_string;
+    }
 
-  location = /favicon.ico { access_log off; log_not_found off; }
-  location = /robots.txt  { access_log off; log_not_found off; }
+    # Deny access to hidden files
+    location ~ /\. {
+        deny all;
+        access_log off;
+        log_not_found off;
+    }
 
-  error_page 404 /index.php;
+    # Favicon and robots
+    location = /favicon.ico {
+        access_log off;
+        log_not_found off;
+    }
+    
+    location = /robots.txt {
+        access_log off;
+        log_not_found off;
+    }
 
-  location ~* \.(jpg|jpeg|gif|png|css|js|ico|webp|tiff|ttf|svg)$ {
-    expires 5d;
-  }
-
-  location ~ \.php$ {
-    fastcgi_split_path_info ^(.+\.php)(/.+)$;
-    fastcgi_pass unix:/var/run/php-fpm.sock;
-    fastcgi_index index.php;
-    fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
-    fastcgi_param SCRIPT_NAME $fastcgi_script_name;
-    include fastcgi_params;
-  }
-
-  # deny access to . files
-  location ~ /\. {
-    log_not_found off;
-    deny all;
-  }
-
-  location ~ /\.(?!well-known).* {
-    deny all;
-  }
+    # Cache static assets
+    location ~* \.(jpg|jpeg|gif|png|css|js|ico|webp|tiff|ttf|svg)$ {
+        expires 5d;
+        add_header Cache-Control "public, immutable";
+    }
 }
